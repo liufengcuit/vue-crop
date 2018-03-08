@@ -1,13 +1,34 @@
 <template>
 	<div class="crop">
 		<div class="upload-btn">
-			<el-button type="primary" size="small" @click="uploadDialog = true;">上传<i class="el-icon-upload el-icon--right"></i></el-button>
+			
+			<el-form>
+				
+				<el-col :span="2">
+					<el-form-item label="宽度" :label-width="'50px'">
+						<el-input v-model="cWidth" auto-complete="off" size="small"
+	                          placeholder="整数"></el-input>
+						
+					</el-form-item>
+				</el-col>
+				<el-col :span="2">
+					<el-form-item label="高度" :label-width="'50px'">
+						<el-input v-model="cHeight" auto-complete="off" size="small"
+		                          placeholder="整数"></el-input>
+	                    
+					</el-form-item>
+				</el-col>
+				<el-col :span="1" :offset="1">
+					<el-button type="primary" size="small" @click="computedZoom(); uploadDialog = true;">上传<i class="el-icon-upload el-icon--right"></i></el-button>
+				</el-col>
+			</el-form>
 		</div>
 		<el-dialog :title="'头像裁剪'" :visible.sync="uploadDialog" width="40%">
 			<el-row>
+				
 				<el-col :span="12">
 					<div class="cavans">
-						<croppa v-model="myCroppa" v-if="uploadDialog"></croppa>
+						<croppa v-model="myCroppa" v-if="uploadDialog" :width="cropWidth" :height="cropHeight" placeholder="请选择图片" :placeholder-font-size="fontSize"></croppa>
 					</div>
 				</el-col>
 				<el-col :span="12">
@@ -30,11 +51,22 @@
 				myCroppa: {},
 				uploadDialog:false,
 				localImageUri:'',
-				files:''
+				files:'',
+				cropWidth: 200,
+				cropHeight: 200,
+				cWidth:'200',
+				cHeight: '200',
+				fontSize:'16'
 			}
 		},
 		methods:{
+			computedZoom(){
+				this.cropWidth = Number(this.cWidth);
+		    	this.cropHeight = Number(this.cHeight);
+		    	this.fontSize = this.cropWidth/200 * 16
+			},
 		    generateImage(){
+		    	
 		    	let url = this.myCroppa.generateDataUrl()
 		        if (!url) {
 		          alert('no image')
@@ -79,7 +111,7 @@
 	}
 	
 	.croppa-container,
-	.canvas,
+	.cavans,
 	.localImage
 	{
 		width: 200px;
@@ -93,5 +125,12 @@
 	}
 </style>
 <style>
-	
+	.croppa-container canvas{
+		width: 100%!important;
+		height: 100%!important;
+	}
+	svg{
+		width: 20px!important;
+		height: 20px!important;
+	}
 </style>
