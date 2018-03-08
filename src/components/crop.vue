@@ -1,14 +1,13 @@
 <template>
 	<div class="crop">
-		<div class="crop-content" @click="uploadDialog = true;">
-			<i class="el-icon-plus avatar-uploader-icon" v-if="imageUrl==''"></i>
-			<img :src="imageUrl" alt="" v-else>
+		<div class="upload-btn">
+			<el-button type="primary" size="small" @click="uploadDialog = true;">上传<i class="el-icon-upload el-icon--right"></i></el-button>
 		</div>
 		<el-dialog :title="'头像裁剪'" :visible.sync="uploadDialog" width="40%">
 			<el-row>
 				<el-col :span="12">
 					<div class="cavans">
-						<croppa v-model="myCroppa"></croppa>
+						<croppa v-model="myCroppa" v-if="uploadDialog"></croppa>
 					</div>
 				</el-col>
 				<el-col :span="12">
@@ -29,7 +28,6 @@
 		data() {
 			return {
 				myCroppa: {},
-				imageUrl:'',
 				uploadDialog:false,
 				localImageUri:'',
 				files:''
@@ -45,9 +43,6 @@
 		        this.localImageUri = url;
 		        this.files = this.dataURLtoFile(url, this.myCroppa.getChosenFile().name)
 		    },
-			openFile(){
-				document.querySelector("#crop_file").click();
-			},
 			handleAvatarSuccess(){
 				console.log(this.data)
 				console.log(this.action)
@@ -65,18 +60,6 @@
 	            	this.uploadDialog = false;
 	            })
 			},
-			uploadImage(){
-				var files = document.querySelector('#crop_file').files[0];
-				if(document.querySelector('#crop_file').value == ""){
-					console.log("请上传图片");
-					return false;
-				}else{
-					if(!/\.(gif|jpg|jpeg|png|GIF|JPG|PNG)$/.test(document.querySelector('#crop_file').value)){
-					  alert("图片类型必须是.gif,jpeg,jpg,png中的一种")
-					  return false;
-					}
-				}
-			},
 			// dataUrl转文件
 			dataURLtoFile(dataurl, filename) {
 				var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
@@ -91,12 +74,10 @@
 	}
 </script>
 <style scoped>
-	.crop_file{
-		display: none
+	.upload-btn{
+		margin-bottom: 10px;
 	}
-	.crop-content img{
-		width: 100%;
-	}
+	
 	.croppa-container,
 	.canvas,
 	.localImage
@@ -112,28 +93,5 @@
 	}
 </style>
 <style>
-	.crop-content{
-		display: inline-block;
-		font-size: 0;
-		width: 178px;
-		height: 178px;
-		border-radius: 6px;
-		cursor: pointer;
-		border: 1px dashed #c0ccda;
-		box-sizing: border-box;
-	}
-	.el-icon-plus:after{
-		content: "";
-	}
-	.avatar-uploader-icon{
-		font-size: 28px;
-	    color: #8c939d;
-	    width: 178px;
-	    height: 178px;
-	    line-height: 178px;
-	    text-align: center;
-	}
-	.crop .croppa-container{
-		background-color: none;
-	}
+	
 </style>
